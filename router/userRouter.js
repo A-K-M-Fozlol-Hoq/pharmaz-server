@@ -11,6 +11,6 @@ const router = express.Router();
  * @method POST
  * @endpoint base_url/api/user/createUser
  */
-router.post('/createUser', verifyTokenMiddleware, createUser);
+router.post('/createUser', createUser);
 
 module.exports = router;
