@@ -27,7 +27,7 @@ app.use(bodyParser.json());
 
 app.use('/api', router);
 app.get('/', (req, res) => {
-  res.send('Hello World! We are Pharmaz.');
+  res.send('Hello World! We are Pharmaz. working');
 });
 app.post('/test', verifyCustomTokenMiddleware, (req, res) => {
   res.send({ ok: req.body });
