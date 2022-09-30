@@ -4,13 +4,14 @@ const jwt = require('jsonwebtoken');
 const getEmailFromToken = (token) => {};
 const createError = require('http-errors');
 
-const verifyTokenMiddleware = async (req, res, next) => {
+const verifyCustomTokenMiddleware = async (req, res, next) => {
   if (req.headers?.authorization?.startsWith('Bearer ')) {
     try {
       const token = req.headers.authorization?.split(' ')[1];
       const decoded = jwt.verify(token, process.env.JWT_SECRET);
       const { email } = decoded;
-      return email;
+      req.email = email;
+      // return email;
     } catch (e) {
       res.status(401).send({
         isSuccess: false,
@@ -23,3 +24,5 @@ const verifyTokenMiddleware = async (req, res, next) => {
   }
   next();
 };
+
+module.exports = { verifyCustomTokenMiddleware };

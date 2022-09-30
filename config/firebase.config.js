@@ -1,8 +1,8 @@
-// const admin = require('firebase-admin');
+// unused code as firebaseJwtCheck is not working
+// const { initializeApp } = require('firebase-admin/app');
 
-// // VERIFY TOKEN SDK
-// admin.initializeApp({
-//   credential: admin.credential.cert({
+// const admin = initializeApp({
+//   credential: require('firebase-admin').credential.cert({
 //     type: process.env.FIREBASE_TYPE,
 //     project_id: process.env.FIREBASE_PROJECT_ID,
 //     private_key_id: process.env.FIREBASE_PRIVATE_KEY_ID,
@@ -16,3 +16,5 @@
 //     client_x509_cert_url: process.env.FIREBASE_CLIENT_X509_CERT_URL,
 //   }),
 // });
+
+// module.exports = { admin };

@@ -9,6 +9,9 @@ var bodyParser = require('body-parser');
 const fileUpload = require('express-fileupload');
 const { notFoundHandler, errorHandler } = require('./middlewares/errorHandler');
 const axios = require('axios');
+const {
+  verifyCustomTokenMiddleware,
+} = require('./middlewares/verifyCustomToken');
 
 // Creating APP and PORT
 const app = express();
@@ -26,9 +29,9 @@ app.use('/api', router);
 app.get('/', (req, res) => {
   res.send('Hello World!');
 });
-// app.post('/test', checkIfAuthenticated, (req, res) => {
-//   res.send({ ok: req.body });
-// });
+app.post('/test', verifyCustomTokenMiddleware, (req, res) => {
+  res.send({ ok: req.body });
+});
 // app.post('/test', verifyTokenMiddleware, (req, res) => {
 //   res.send({ ok: req.body });
 // });

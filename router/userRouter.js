@@ -1,6 +1,6 @@
 const express = require('express');
 const userController = require('../controllers/userController');
-// const { verifyTokenMiddleware } = require('../middlewares/verifyToken');
+// const { verifyCustomTokenMiddleware } = require('../middlewares/verifyCustomToken');
 // Destructuring controllers
 const { createUser } = userController;
 
