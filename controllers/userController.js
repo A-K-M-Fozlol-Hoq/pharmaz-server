@@ -18,18 +18,12 @@ userController.createUser = async (req, res, next) => {
     const userType = req.body.userType;
 
     const tokenSecret = req.headers?.authorization?.split(' ')[1];
-    console.log(tokenSecret, 'tokenSecret,', typeof tokenSecret);
-    console.log(
-      process.env.USER_TOKEN_KEY,
-      typeof process.env.USER_TOKEN_KEY,
-      'USER_TOKEN_KEY',
-      process.env.USER_TOKEN_KEY === tokenSecret
-    );
     if (!tokenSecret || process.env.USER_TOKEN_KEY != tokenSecret) {
       const error = new Error('Please send valid token!');
       error.code = 401;
       throw error;
     }
+
     if (name && email && userType) {
       // validation part
       const isNameValid = isNameValidFunc(name);
@@ -37,13 +31,14 @@ userController.createUser = async (req, res, next) => {
       const isUserTypeValid = isUserTypeValidFunc(userType);
 
       if (isNameValid && isEmailValid && isUserTypeValid) {
+        console.log(name, email, tokenSecret, userType);
         const newUserData = {
           name: name,
           email: email,
           userType: userType,
         };
         const newUser = new User(newUserData);
-
+        console.log(newUser);
         // save at database
         const result = await newUser.save();
         // create jwt token
