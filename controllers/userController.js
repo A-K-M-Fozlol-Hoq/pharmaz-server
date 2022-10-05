@@ -12,18 +12,31 @@ const userController = {};
 
 // insert new user at user collection
 userController.createUser = async (req, res, next) => {
-  const name = req.body.name;
-  const email = req.body.email;
-  const userType = req.body.userType;
+  try {
+    const name = req.body.name;
+    const email = req.body.email;
+    const userType = req.body.userType;
 
-  if (name && email && userType) {
-    // validation part
-    const isNameValid = isNameValidFunc(name);
-    const isEmailValid = isEmailValidFunc(email);
-    const isUserTypeValid = isUserTypeValidFunc(userType);
+    const tokenSecret = req.headers?.authorization?.split(' ')[1];
+    console.log(tokenSecret, 'tokenSecret,', typeof tokenSecret);
+    console.log(
+      process.env.USER_TOKEN_KEY,
+      typeof process.env.USER_TOKEN_KEY,
+      'USER_TOKEN_KEY',
+      process.env.USER_TOKEN_KEY === tokenSecret
+    );
+    if (!tokenSecret || process.env.USER_TOKEN_KEY != tokenSecret) {
+      const error = new Error('Please send valid token!');
+      error.code = 401;
+      throw error;
+    }
+    if (name && email && userType) {
+      // validation part
+      const isNameValid = isNameValidFunc(name);
+      const isEmailValid = isEmailValidFunc(email);
+      const isUserTypeValid = isUserTypeValidFunc(userType);
 
-    if (isNameValid && isEmailValid && isUserTypeValid) {
-      try {
+      if (isNameValid && isEmailValid && isUserTypeValid) {
         const newUserData = {
           name: name,
           email: email,
@@ -44,36 +57,35 @@ userController.createUser = async (req, res, next) => {
           result,
           token,
         });
-      } catch (err) {
-        // res.status(500).json({
-        //   isSuccess: false,
-        //   message: 'Internal server error',
-        // });
-        next(err);
+      } else {
+        res.status(422).json({
+          isSuccess: false,
+          message: 'please provide valid name, email and userType.',
+        });
       }
     } else {
       res.status(422).json({
         isSuccess: false,
-        message: 'please provide valid name, email and userType.',
+        message: 'name, email and userType are required',
       });
     }
-  } else {
-    res.status(422).json({
+  } catch (e) {
+    res.status(e.code || 500).send({
+      message: e.message || `unknown error ocurred at user controller`,
       isSuccess: false,
-      message: 'name, email and userType are required',
     });
   }
 };
 
 userController.getUser = async (req, res, next) => {
-  const email = req.body.email;
+  try {
+    const email = req.body.email;
 
-  if (email) {
-    // validation part
-    const isEmailValid = isEmailValidFunc(email);
+    if (email) {
+      // validation part
+      const isEmailValid = isEmailValidFunc(email);
 
-    if (isEmailValid) {
-      try {
+      if (isEmailValid) {
         // get from db
         const user = User.findOne({ email: email });
         if (user) {
@@ -102,23 +114,22 @@ userController.getUser = async (req, res, next) => {
             token,
           });
         }
-      } catch (err) {
-        // res.status(500).json({
-        //   isSuccess: false,
-        //   message: 'Internal server error',
-        // });
-        next(err);
+      } else {
+        res.status(422).json({
+          isSuccess: false,
+          message: 'please provide valid email.',
+        });
       }
     } else {
       res.status(422).json({
         isSuccess: false,
-        message: 'please provide valid email.',
+        message: ' email is required',
       });
     }
-  } else {
-    res.status(422).json({
+  } catch (e) {
+    res.status(e.code || 500).send({
+      message: e.message || `unknown error ocurred at user controller`,
       isSuccess: false,
-      message: ' email is required',
     });
   }
 };
