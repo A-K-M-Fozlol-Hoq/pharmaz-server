@@ -76,13 +76,20 @@ userController.getUser = async (req, res, next) => {
   try {
     const email = req.body.email;
 
+    const tokenSecret = req.headers?.authorization?.split(' ')[1];
+    if (!tokenSecret || process.env.USER_TOKEN_KEY != tokenSecret) {
+      const error = new Error('Please send valid token!');
+      error.code = 401;
+      throw error;
+    }
+
     if (email) {
       // validation part
       const isEmailValid = isEmailValidFunc(email);
 
       if (isEmailValid) {
         // get from db
-        const user = User.findOne({ email: email });
+        const user = await User.findOne({ email: email });
         if (user) {
           // create jwt token
           const tokenData = {
