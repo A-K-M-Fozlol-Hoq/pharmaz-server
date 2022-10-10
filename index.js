@@ -1,7 +1,7 @@
 require('dotenv').config();
 const express = require('express');
 const cors = require('cors');
-
+const crons = require('./crons');
 const mgConnect = require('./config/db');
 const router = require('./router');
 const cookieParser = require('cookie-parser');
