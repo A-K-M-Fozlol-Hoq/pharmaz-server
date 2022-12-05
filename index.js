@@ -32,9 +32,6 @@ app.get('/', (req, res) => {
 app.post('/test', verifyCustomTokenMiddleware, (req, res) => {
   res.send({ ok: req.body });
 });
-// app.post('/test', verifyTokenMiddleware, (req, res) => {
-//   res.send({ ok: req.body });
-// });
 
 // 404 not found handler
 app.use(notFoundHandler);

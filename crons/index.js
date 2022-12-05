@@ -1,1 +1,1 @@
-const { scrapMedicine } = require('./scrapMedicine');
+// const { scrapMedicine } = require('./scrapMedicine');
